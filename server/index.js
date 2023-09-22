@@ -6,6 +6,11 @@ import  helmet  from "helmet";
 import morgan from "morgan";
 import path from "path";
 import  {fileURLToPath}  from "url";
+import './config/db.js';
+import  authRoutes  from './routes/auth.js'
+import  usersRoutes  from './routes/users.js'
+import  hotelsRoutes  from './routes/hotels.js'
+import  roomsRoutes  from './routes/rooms.js'
 
 // configuration 
 const __filename = fileURLToPath(import.meta.url)
@@ -22,8 +27,29 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}))
 app.use(cors())
 app.use("/assets",express.static(path.join(__dirname,'public/assets')))
 
+// middlewares 
+app.use("/api/auth",authRoutes);
+app.use("/api/users",usersRoutes);
+app.use("/api/hotels",hotelsRoutes);
+app.use("/api/rooms",roomsRoutes);
+
+//error handling middleware
+app.use((err, req, res, next)=>{
+    const errStatus = err.status || 500 ;
+    const errMessage = err.message || "something went wrong" ;
+
+    return res.status(errStatus).json({
+        success: false,
+        status: errStatus,
+        message: errMessage,
+        stack: err.stack,
+    });
+})
+
 // Routes 
-// app.use("/auth",authRoutes)
+app.get("/",(req,res) => {
+    res.status(200).send("Api Running")
+})
 
 app.listen(PORT,() => {
     console.log(`server started on port ${PORT}`)
