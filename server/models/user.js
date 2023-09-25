@@ -5,6 +5,7 @@ export const User = sequelize.define('users', {
   // Model attributes are defined here
   username: {
     type: DataTypes.STRING,
+    unique: true,
     allowNull: false,
   },
   email: {
@@ -19,7 +20,12 @@ export const User = sequelize.define('users', {
     type: DataTypes.STRING,
     allowNull: false,
     // allowNull defaults to true
-  }
+  },
+  isAdmin: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false,
+  },
 }, {
   // Other model options go here
 });
