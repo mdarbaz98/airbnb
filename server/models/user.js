@@ -3,6 +3,11 @@ import {DataTypes } from 'sequelize';
 
 export const User = sequelize.define('users', {
   // Model attributes are defined here
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   username: {
     type: DataTypes.STRING,
     unique: true,

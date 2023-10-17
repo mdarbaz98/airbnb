@@ -1,11 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useRef, useContext } from "react";
+import { Link, json, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import "../scss/login.scss";
 import toast, { Toaster } from 'react-hot-toast';
+import axios from 'axios';
+import { AppContext } from "../context/appContext";
 
 export default function Login() {
   // const toast = useRef(null);
+  const [ loading, setLoading ] = useState(false)
+  const { setUser } = useContext(AppContext)
+  const navigate = useNavigate('')
   const validate = (values) => {
     const errors = {};
     if (!values.password) {
@@ -31,15 +36,38 @@ export default function Login() {
       password: "",
     },
     validate,
-    onSubmit: (values) => {
-      toast.success(`Login Successfully`,{
-        position: "bottom-center",
-        style: {
-          maxWidth: "fit-content"
+    onSubmit: async (values) => {
+      setLoading(true)
+      try {
+        const {data, status} = await axios.post("/auth/login",values);
+        if( status && status == 200 ){
+          toast.success(`Login Successfully`,{
+            position: "bottom-center",
+            style: {
+              maxWidth: "fit-content"
+            }
+          });
+          setUser(data)
+          localStorage.setItem("user",JSON.stringify(data))
+          setLoading(false)
+          setTimeout(() => {
+            navigate('/')
+          },1000)
         }
-      })
+      } catch (error) {
+       const err = error?.response?.data?.message || "something went wrong :("
+        toast.error(`${err}`,{
+          position: "bottom-center",
+          style: {
+            maxWidth: "fit-content"
+          }
+        })
+        setLoading(false)
+      }
     },
   });
+
+  console.log(loading)
 
   return (
     <div className="form-demo h-screen grow flex justify-center items-center">
@@ -89,8 +117,9 @@ export default function Login() {
           </div>
           <div className="flex flex-col gap-5 items-center justify-between">
             <button
-              className="bg-rose-500 w-full hover:bg-rose-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+              className={`bg-rose-500 w-full hover:bg-rose-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               type="submit"
+              disabled={loading}
             >
               Sign In
             </button>

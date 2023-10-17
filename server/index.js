@@ -5,7 +5,7 @@ import  dotenv  from "dotenv";
 import  helmet  from "helmet";
 import morgan from "morgan";
 import path from "path";
-import  {fileURLToPath}  from "url";
+import  { fileURLToPath }  from "url";
 import './config/db.js';
 import  authRoutes  from './routes/auth.js'
 import  usersRoutes  from './routes/users.js'
@@ -32,7 +32,7 @@ app.use(cookieParser())
 app.use("/api/auth",authRoutes);
 app.use("/api/user",usersRoutes);
 app.use("/api/hotels",hotelsRoutes);
-app.use("/api/rooms",roomsRoutes);
+app.use("/api/room",roomsRoutes);
 
 //error handling middleware
 app.use((err, req, res, next)=>{

@@ -20,11 +20,11 @@ export const login = async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ where: { email } })
-    if(!user) return next(createError(404,"User Not Found With This Email!"));
+    if(!user) return next(createError(404,"User Not Found With This Email !"));
     const isPassword = await bcrypt.compare(req.body.password, user.password);
     if(!isPassword) return next(createError(400, "Wrong Password"));
      const token = jwt.sign({id: user.id, user: user.username, isAdmin: user.isAdmin},process.env.JWT_SECRET);
-    const { password, isAdmin, ...otherDetails } = user.dataValues ;
+    const { password, createdAt, updatedAt, ...otherDetails } = user.dataValues ;
     res.cookie("access_token",token,{
       httpOnly: true
     }).status(200).json(otherDetails)
