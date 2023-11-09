@@ -1,15 +1,20 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import { register } from "../api";
+import toast, { Toaster } from "react-hot-toast";
+import { AppContext } from "../context/appContext";
 
 export default function Register() {
+
+  const navigate = useNavigate('')
+  const { setUser } = useContext(AppContext)
+
   const validate = (values) => {
     const errors = {};
     if (!values.username) {
       errors.username = "Required";
-    } else if (values.username.length < 6) {
-      errors.username = "Must be 4 characters or greater";
-    }
+    } 
 
     if (!values.password) {
       errors.password = "Required";
@@ -24,7 +29,6 @@ export default function Register() {
     ) {
       errors.email = "Invalid email address";
     }
-
     return errors;
   };
 
@@ -34,9 +38,23 @@ export default function Register() {
       email: "",
       password: "",
     },
-    // validate,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    validate,
+    onSubmit: async (values) => {
+        const res = await register(values)
+        if(res) {
+          if(res.status === 201){
+            toast.success(`${res.data.message}`,{
+              position: "bottom-center",
+              style: {
+                maxWidth: "fit-content"
+              }
+            });
+            setUser(res.data.user)
+            setTimeout(() => {
+              navigate('/')
+            },1000)
+          }
+        }
     },
   });
 
@@ -63,14 +81,10 @@ export default function Register() {
               onChange={formik.handleChange}
               value={formik.values.username}
             />
+            {formik.errors.username ? <div>{formik.errors.username}</div> : null}
           </div>
           <div class="mb-4">
             <label
-              id="email"
-              name="email"
-              type="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
               class="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="email"
             >
@@ -78,10 +92,13 @@ export default function Register() {
             </label>
             <input
               class="appearance-none border rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
+              id="email"
               type="text"
+              onChange={formik.handleChange}
+              value={formik.values.email}
               placeholder="Email"
             />
+            {formik.errors.email ? <div>{formik.errors.email}</div> : null}
           </div>
           <div class="mb-6">
             <label
@@ -98,13 +115,8 @@ export default function Register() {
               onChange={formik.handleChange}
               value={formik.values.password}
             />
+            {formik.errors.password ? <div>{formik.errors.password}</div> : null}
           </div>
-          {/* <div class="mb-6">
-      <label class="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmpassword">
-        Confirm Password
-      </label>
-      <input class="appearance-none border rounded-lg w-full py-3 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="confirmpassword" type="password" placeholder="Confirm Password" />
-    </div> */}
           <div class="flex flex-col gap-5 items-center justify-between">
             <button
               type="submit"

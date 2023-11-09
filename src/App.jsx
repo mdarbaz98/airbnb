@@ -1,16 +1,13 @@
 import React from "react";
-import { Routes, Route, RouterProvider } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import "./scss/index.scss";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Layout from "./components/Layout";
-import Register from "./pages/Register";
+
 import axios from "axios";
 import { AppContextProvider } from "./context/appContext";
-import Room from "./pages/Room";
 import router from "./routes";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:5000/api";
@@ -18,6 +15,7 @@ function App() {
 
   return (
     <div className="App">
+      <Toaster position="top-center" reverseOrder={false} />
       <AppContextProvider>
         <RouterProvider router={router} />
       </AppContextProvider>
@@ -26,4 +24,3 @@ function App() {
 }
 
 export default App;
-

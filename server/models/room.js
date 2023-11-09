@@ -49,9 +49,9 @@ const Room = sequelize.define('rooms', {
   },
 });
 
-Room.hasMany(RoomImages, { foreignKey: 'RoomId', as: 'images'  });
-Room.hasMany(RoomPerks, { foreignKey: 'RoomId' ,as: 'perks'  });
-Room.hasMany(RoomDates, { foreignKey: 'RoomId' ,as: 'dates' });
+Room.hasMany(RoomImages, { foreignKey: 'RoomId', as: 'images', onDelete: 'CASCADE', hooks: true });
+Room.hasMany(RoomPerks, { foreignKey: 'RoomId' ,as: 'perks', onDelete: 'CASCADE', hooks: true });
+Room.hasMany(RoomDates, { foreignKey: 'RoomId' ,as: 'dates', onDelete: 'CASCADE', hooks: true });
 
 // Create the table if it doesn't exist
 try {

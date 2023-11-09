@@ -79,7 +79,7 @@ export default function Room() {
   };
 
   const removeGuests = (target) => {
-    if (target == "adult") {
+    if (target === "adult") {
       setBooking((prevState) => ({
         ...prevState,
         adults: prevState.adults - 1,
@@ -114,7 +114,7 @@ export default function Room() {
                   <img
                     key={ind}
                     className={`cursor-pointer w-full h-full object-cover ${
-                      ind == 0 && "col-span-2 row-span-3"
+                      ind === 0 && "col-span-2 row-span-3"
                     }`}
                     src={img.name}
                     alt=""

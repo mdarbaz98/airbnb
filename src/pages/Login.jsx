@@ -67,8 +67,6 @@ export default function Login() {
     },
   });
 
-  console.log(loading)
-
   return (
     <div className="form-demo h-screen grow flex justify-center items-center">
       <Toaster/>
